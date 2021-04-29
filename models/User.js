@@ -46,12 +46,22 @@ userSchema.pre('save',function(next){
                 // Store hash in your password DB.
                 if(err) return next(err)
                 user.password = hash;
-                next()
+                next();
             });
         });
+    }else {
+        next();
     }
     //use salt 비밀번호 암호화
 })
+
+userSchema.methods.comparePassword = function(plainPassword,cb){
+    //plainpassword = 123456 = > check 후 비교 암호화된 비밀번호  %$^$#^#$^#$%
+    bcrypt.compare(plainPassword, this.password,function(err,isMatch){
+        if(err) return cb(err),
+        cb(null,isMatch)
+    })
+}
 
 const User = mongoose.model('User', userSchema);
 
