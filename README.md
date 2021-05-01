@@ -6,5 +6,5 @@ save-dev local ModeUse bcrypt
 1. mongoose - backend database
 2. bcrypt - security password
 3. ### user Login 
-  1. jsonwebtoken
-  2. cookie-parser
+    * jsonwebtoken
+    * cookie-parser

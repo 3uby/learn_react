@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const {User} = require('./models/User');
 const config = require('./config/key');
+const {auth} = require('./middlieware/auth');
 
 //데이터를 aplicatoin형태로 가져오게함
 app.use(bodyParser.urlencoded({extended:true}));
@@ -17,8 +18,9 @@ const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI,{
   useNewUrlParser: true, useUnifiedTopology: true,
   useCreateIndex: true, useFindAndModify: false
-}).then(()=> console.log('MongoDB Connected....'))
-.catch(err => console.log(err))
+})
+  .then(()=> console.log('MongoDB Connected....'))
+  .catch(err => console.log(err))
 
 
 
@@ -26,7 +28,7 @@ app.get('/', (req, res) => {
   res.send('Helllo World!')
 })
 
-app.post('/register',(req,res) => {  
+app.post('/api/users/register',(req,res) => {  
 //회원가입할때 필요한 정보들을 client에서 가져오기 데이터 베이스에 넣어주기  
   const user = new User(req.body);
 
@@ -38,7 +40,7 @@ app.post('/register',(req,res) => {
   })
 })
 
-app.post('/login',(req,res)=>{
+app.post('/api/users/login',(req,res)=>{
   //요청된 이메일을 데이터베이스에서 있는지 찾는다
   User.findOne({email : req.body.email },(err,user)=>{      
     if(!user) {
@@ -64,6 +66,20 @@ app.post('/login',(req,res)=>{
       }) 
     }) 
   }) 
+})
+//Router <-express
+app.get('/api/users/auth',auth,(req,res)=>{
+
+  res.status(200).json({
+    _id : req.user._id,
+    isAdmin : req.user.role === 0 ? false : true,
+    isAuth : true,
+    email : req.user.email,
+    name : req.user.name,
+    lastName : req.user.lastName,
+    role : req.user.role,
+    image : req.user.image
+  })
 })
 
 app.listen(port, () => {
