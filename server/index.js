@@ -1,12 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 3000
-
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const {User} = require('./models/User');
 const config = require('./config/key');
 const {auth} = require('./middlieware/auth');
+const {User} = require('./models/User');
 
 //데이터를 aplicatoin형태로 가져오게함
 app.use(bodyParser.urlencoded({extended:true}));
@@ -24,8 +22,11 @@ mongoose.connect(config.mongoURI,{
 
 
 
-app.get('/', (req, res) => {
-  res.send('Helllo World!')
+app.get('/', (req, res) => { res.send('Helllo World!') })
+
+app.get('/api/hello', (req,res)=>{
+
+  res.send('hello world!');
 })
 
 app.post('/api/users/register',(req,res) => {  
@@ -82,17 +83,20 @@ app.get('/api/users/auth',auth,(req,res)=>{
   })
 })
 
-app.get('/api/users/logout',auth,(req,res)=>{
-  User.findOneAndUpdate({_id:req.users._id},
-  {token:""},
-  (err,user) => {
-    if(err) return res.json({success: false, err});
-    return res.status(200).send({
-      success : true
-    })
-  }
+app.get('/api/users/logout', auth, (req, res) => {
+  User.findOneAndUpdate({ _id: req.users._id },
+    { token: "" },
+    (err, user) => {
+      if (err) return res.json({ success: false, err });
+      return res.status(200).send({
+        success: true
+      })
+    }
   )
 })
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+
+const port = 5000;
+
+app.listen(port, () => { console.log(`Example app listening at http://localhost:${port}`) })
+//loader:O926 error fixed
+//package.json 에서 script를 변경해준다 삭제후재설치도 좋은방법
