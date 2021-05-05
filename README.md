@@ -9,6 +9,8 @@ save-dev local ModeUse bcrypt
 3. ### user Login 
    * jsonwebtoken
    * cookie-parser
+   * Formilk Yup
+   1. redux
 
 ## 서버와 통신하는법 cors 
 1. 개발자도구

@@ -8,7 +8,7 @@ function LadingPage() {
   },[])
 
   return (
-    <div>
+    <div style={{display:'flex', justifyContent:'center',alignItems:'center',width:'100%',height:'100vh'}}>
       LadingPage
     </div>
   )
